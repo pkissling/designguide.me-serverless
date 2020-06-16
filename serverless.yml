@@ -14,12 +14,12 @@ provider:
   stage: v1
 
 plugins:
-  # this registers the plugin
-  # with serverless
   - serverless-rust
+  - serverless-domain-manager
 
 package:
   individually: true
+
 functions:
   test:
     handler: messages
@@ -28,5 +28,10 @@ functions:
           path: /messages
           method: POST
 
+custom:
+  customDomain:
+    domainName: api.designguide.me
+    basePath: ${self:provider.stage}
+    createRoute53Record: true
 
 

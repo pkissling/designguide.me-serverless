@@ -8,6 +8,7 @@
     "author": "Patrick Kissling",
     "homepage": "https://github.com/pkissling/designguide.me-serverless#readme",
     "devDependencies": {
+        "serverless-domain-manager": "^2.6.13",
         "serverless-rust": "^0.3.8"
     }
 }
