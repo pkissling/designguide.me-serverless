@@ -1,0 +1,4 @@
+lang: node
+
+script:
+  - make deploy
