@@ -1,11 +1,11 @@
 .PHONY: build clean deploy
 
-build:
-	npm install
+default: deploy
 
-clean:
-	rm -rf ./target
+prepare:
+	npm install serverless-domain-manager
+	npm install serverless-rust
 
-deploy: clean build
+deploy: prepare
 	sls create_domain
-	sls deploy --verbose
+	sls deploy
