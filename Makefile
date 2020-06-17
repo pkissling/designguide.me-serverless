@@ -1,6 +1,6 @@
-.PHONY: build clean deploy
+.PHONY: prepare deploy_dev test_dev deploy_prod
 
-default: deploy
+default: deploy_prod
 
 prepare:
 	npm install serverless-domain-manager@2.6.13
@@ -10,8 +10,9 @@ deploy_dev: prepare
 	sls create_domain --stage dev
 	sls deploy --stage dev
 
-test_dev:
-	echo tests
+test_dev: deploy_dev
+	chmod +x tests/messages.sh
+	./tests/messages.sh
 
 deploy_prod: test_dev
 	sls create_domain --stage prod

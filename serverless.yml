@@ -29,6 +29,7 @@ functions:
           method: POST
 
 custom:
+
   customDomain:
     domainName: ${self:custom.domains.${self:custom.stage}}
     basePath: v1

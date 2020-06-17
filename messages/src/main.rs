@@ -43,7 +43,7 @@ fn handle_message(
     LambdaResponseBuilder::new()
         .with_status(200)
         .with_json(MessageEventResponse {
-            message: format!("yoo, '{}'!", name),
+            message: format!("Hello, {}!", name),
         })
         .build()
 }
