@@ -1,2 +1,2 @@
 [workspace]
-    members = ["messages"]
+    members = ["messages", "json_converter"]

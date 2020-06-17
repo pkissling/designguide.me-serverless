@@ -1,15 +1,9 @@
-////!
-////! Rust Lambda
-////! Copyright (c) 2019 SilentByte <https://silentbyte.com/>
-////!
-
 use std::collections::HashMap;
 
+use lambda_runtime::error::HandlerError;
 use serde::de::{DeserializeOwned, Deserializer, Error};
 use serde::{Deserialize, Serialize};
 use serde_json;
-use lambda_runtime::{error::HandlerError};
-
 
 /// Represents a deserializer function that deserializes values from a JSON string and
 /// is intended to be used in conjunction with serde's with attribute, e.g.
@@ -103,7 +97,7 @@ impl LambdaResponseBuilder {
 
     pub fn bad_request(self, error_message: &str) -> Self {
         self.with_json(LambdaErrorMessage {
-            message: error_message.to_string()
+            message: error_message.to_string(),
         })
     }
 

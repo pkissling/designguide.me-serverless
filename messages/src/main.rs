@@ -1,8 +1,8 @@
-mod lambda_gateway;
+extern crate json_converter;
 
 use std::error::Error;
 
-use lambda_gateway::{LambdaRequest, LambdaResponse, LambdaResponseBuilder};
+use json_converter::{LambdaRequest, LambdaResponse, LambdaResponseBuilder};
 use lambda_runtime::{error::HandlerError, lambda, Context};
 use log::{self, error};
 use serde_derive::{Deserialize, Serialize};
@@ -21,12 +21,13 @@ struct MessageEventResponse {
 
 fn main() -> Result<(), Box<dyn Error>> {
     simple_logger::init_with_level(log::Level::Debug)?;
-    lambda!(my_handler);
+
+    lambda!(handle_message);
 
     Ok(())
 }
 
-fn my_handler(
+fn handle_message(
     e: LambdaRequest<MessageEventRequest>,
     c: Context,
 ) -> Result<LambdaResponse, HandlerError> {
@@ -42,7 +43,7 @@ fn my_handler(
     LambdaResponseBuilder::new()
         .with_status(200)
         .with_json(MessageEventResponse {
-            message: format!("Hi, '{}'!", name),
+            message: format!("yoo, '{}'!", name),
         })
         .build()
 }
