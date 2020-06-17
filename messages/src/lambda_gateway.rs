@@ -8,6 +8,8 @@ use std::collections::HashMap;
 use serde::de::{DeserializeOwned, Deserializer, Error};
 use serde::{Deserialize, Serialize};
 use serde_json;
+use lambda_runtime::{error::HandlerError, lambda, Context};
+
 
 /// Represents a deserializer function that deserializes values from a JSON string and
 /// is intended to be used in conjunction with serde's with attribute, e.g.
@@ -39,6 +41,11 @@ impl<Data: DeserializeOwned> LambdaRequest<Data> {
     pub fn body(&self) -> &Data {
         &self.body
     }
+}
+
+#[derive(Serialize)]
+struct LambdaErrorMessage {
+    message: String,
 }
 
 /// The outgoing data that is being passed from our lambda to AWS. AWS API Gateway expects at least
@@ -94,12 +101,18 @@ impl LambdaResponseBuilder {
         self
     }
 
-    pub fn build(self) -> LambdaResponse {
-        LambdaResponse {
+    pub fn bad_request(mut self, error_message: &str) -> Self {
+        
+        self.with_json()
+        self
+    }
+
+    pub fn build(self) -> Result<LambdaResponse, HandlerError> {
+        Ok(LambdaResponse {
             is_base64_encoded: false,
             status_code: self.status_code,
             headers: self.headers,
             body: self.body,
-        }
+        })
     }
 }

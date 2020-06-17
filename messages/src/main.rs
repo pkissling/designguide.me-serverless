@@ -1,51 +1,49 @@
-////!
-////! Rust Lambda
-////! Copyright (c) 2019 SilentByte <https://silentbyte.com/>
-////!
-
 mod lambda_gateway;
 
-use lambda_runtime::{error::HandlerError, lambda, Context};
-use serde::{Deserialize, Serialize};
+use std::error::Error;
 
 use lambda_gateway::{LambdaRequest, LambdaResponse, LambdaResponseBuilder};
+use lambda_runtime::{error::HandlerError, lambda, Context};
+use log::{self, error};
+use serde_derive::{Deserialize, Serialize};
+use simple_logger;
 
-/// This is the JSON payload we expect to be passed to us by the client accessing our lambda.
-#[derive(Deserialize, Debug)]
-struct InputPayload {
+#[derive(Deserialize)]
+struct MessageEventRequest {
+    #[serde(rename = "name")]
     name: String,
 }
 
-/// This is the JSON payload we will return back to the client if the request was successful.
-#[derive(Serialize, Debug)]
-struct OutputPayload {
+#[derive(Serialize)]
+struct MessageEventResponse {
     message: String,
 }
 
-/// This is where most of the work of our Rust lambda is done. Once an incoming request arrives
-/// at our lambda, this function will be invoked along with the request payload we have defined
-/// earlier. It expects a LambdaResponse containing our response payload. In this example,
-/// we simply return a message to the client and generate a bunch of lucky numbers.
-fn lambda_handler(
-    e: LambdaRequest<InputPayload>,
-    _c: Context,
+fn main() -> Result<(), Box<dyn Error>> {
+    simple_logger::init_with_level(log::Level::Debug)?;
+    lambda!(my_handler);
+
+    Ok(())
+}
+
+fn my_handler(
+    e: LambdaRequest<MessageEventRequest>,
+    c: Context,
 ) -> Result<LambdaResponse, HandlerError> {
+
     let payload = e.body();
     let name = &payload.name;
 
-    let response = LambdaResponseBuilder::new()
+    if name == "" {
+        let message = format!("Empty name in request {}", c.aws_request_id);
+        error!("{}", message); // TODO
+        return Ok(LambdaResponseBuilder::bad_request(&message))
+    }
+
+    Ok(LambdaResponseBuilder::new()
         .with_status(200)
-        .with_json(OutputPayload {
+        .with_json(MessageEventResponse {
             message: format!("Hi, '{}'!", name),
         })
-        .build();
-
-    Ok(response)
-}
-
-/// The main function registers our lambda handler which will be called for every incoming request.
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    simple_logger::init_with_level(log::Level::Debug)?;
-    lambda!(lambda_handler);
-    Ok(())
+        .build())
 }
