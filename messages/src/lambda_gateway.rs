@@ -8,7 +8,7 @@ use std::collections::HashMap;
 use serde::de::{DeserializeOwned, Deserializer, Error};
 use serde::{Deserialize, Serialize};
 use serde_json;
-use lambda_runtime::{error::HandlerError, lambda, Context};
+use lambda_runtime::{error::HandlerError};
 
 
 /// Represents a deserializer function that deserializes values from a JSON string and
@@ -101,10 +101,10 @@ impl LambdaResponseBuilder {
         self
     }
 
-    pub fn bad_request(mut self, error_message: &str) -> Self {
-        
-        self.with_json()
-        self
+    pub fn bad_request(self, error_message: &str) -> Self {
+        self.with_json(LambdaErrorMessage {
+            message: error_message.to_string()
+        })
     }
 
     pub fn build(self) -> Result<LambdaResponse, HandlerError> {

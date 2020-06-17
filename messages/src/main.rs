@@ -30,20 +30,19 @@ fn my_handler(
     e: LambdaRequest<MessageEventRequest>,
     c: Context,
 ) -> Result<LambdaResponse, HandlerError> {
-
     let payload = e.body();
     let name = &payload.name;
 
     if name == "" {
         let message = format!("Empty name in request {}", c.aws_request_id);
         error!("{}", message); // TODO
-        return Ok(LambdaResponseBuilder::bad_request(&message))
+        return LambdaResponseBuilder::new().bad_request(&message).build();
     }
 
-    Ok(LambdaResponseBuilder::new()
+    LambdaResponseBuilder::new()
         .with_status(200)
         .with_json(MessageEventResponse {
             message: format!("Hi, '{}'!", name),
         })
-        .build())
+        .build()
 }
