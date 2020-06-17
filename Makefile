@@ -3,9 +3,16 @@
 default: deploy
 
 prepare:
-	npm install serverless-domain-manager
+	npm install serverless-domain-manager@2.6.13
 	npm install serverless-rust
 
-deploy: prepare
-	sls create_domain
-	sls deploy
+deploy_dev: prepare
+	sls create_domain --stage dev
+	sls deploy --stage dev
+
+test_dev:
+	echo tests
+
+deploy_prod: test_dev
+	sls create_domain --stage prod
+	sls deploy --stage prod

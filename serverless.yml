@@ -11,7 +11,7 @@ provider:
   name: aws
   runtime: rust
   region: eu-central-1
-  stage: v1
+  stage: dev
 
 plugins:
   - serverless-rust
@@ -30,5 +30,10 @@ functions:
 
 custom:
   customDomain:
-    domainName: api.designguide.me
-    basePath: ${self:provider.stage}
+    domainName: ${self:custom.domains.${self:custom.stage}}
+    basePath: v1
+
+  stage: ${opt:stage, self:provider.stage}
+  domains:
+    prod: api.designguide.me
+    dev: dev-api.designguide.me
