@@ -34,6 +34,10 @@ fn handle_message(
     let payload = e.body();
     let name = &payload.name;
 
+    for (key, value) in &e.headers {
+        println!("{} / {}", key, value);
+    }
+
     if name == "" {
         let message = format!("Empty name in request {}", c.aws_request_id);
         error!("{}", message); // TODO

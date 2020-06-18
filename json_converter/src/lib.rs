@@ -27,6 +27,7 @@ pub fn deserialize<'a, T: DeserializeOwned, D: Deserializer<'a>>(
 /// but for the purpose of this demonstration, the body field is sufficient and others are ignored.
 #[derive(Deserialize, Debug)]
 pub struct LambdaRequest<Data: DeserializeOwned> {
+    pub headers: HashMap<String, String>,
     #[serde(deserialize_with = "deserialize")]
     body: Data,
 }
@@ -101,7 +102,10 @@ impl LambdaResponseBuilder {
         })
     }
 
-    pub fn build(self) -> Result<LambdaResponse, HandlerError> {
+    pub fn build(mut self) -> Result<LambdaResponse, HandlerError> {
+        self.headers
+            .entry("Access-Control-Allow-Origin".to_owned())
+            .or_insert_with(|| "https://designguide.me".to_owned());
         Ok(LambdaResponse {
             is_base64_encoded: false,
             status_code: self.status_code,
