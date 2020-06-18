@@ -17,3 +17,6 @@ test_dev: deploy_dev
 deploy_prod: test_dev
 	sls create_domain --stage prod
 	sls deploy --stage prod
+
+logs:
+	sls logs -f messages -t
