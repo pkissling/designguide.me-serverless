@@ -5,28 +5,36 @@ service: designguideme-serverless # NOTE: update this with your service name
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
-frameworkVersion: ">=1.28.0 <2.0.0"
 
 provider:
   name: aws
-  runtime: rust
+  runtime: nodejs10.x
   region: eu-central-1
-  stage: dev
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - ses:*
+      Resource: "*"
 
 plugins:
-  - serverless-rust
   - serverless-domain-manager
-
-package:
-  individually: true
+  - serverless-iam-roles-per-function
 
 functions:
   messages:
-    handler: messages
+    handler: messages.messages
+    iamRoleStatementsInherit: true
     events:
       - http:
           path: /messages
           method: POST
+  cors:
+    handler: cors.cors
+    events:
+      - http:
+          path: /messages
+          method: OPTIONS
+
 
 custom:
 
