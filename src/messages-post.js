@@ -23,8 +23,8 @@ exports.handler = async (event) => {
   var corsHeaders = allowedOrigins.includes(origin) ? { "Access-Control-Allow-Origin": origin } : {}
 
   // env variables
-  var toMail = process.env.toMail
-  var fromMail = process.env.fromMail
+  var toMail = process.env.TO_MAIL
+  var fromMail = process.env.FROM_MAIL
 
   // mandatory fields
   var payload = JSON.parse(event.body)
