@@ -7,7 +7,7 @@ const allowedOrigins = [
   'https://www.designguide.me'
 ]
 
-module.exports.messages = async (event) => {
+exports.handler = async (event) => {
 
   var payload = JSON.parse(event.body)
   var validationError = validatePayload(payload)

@@ -1,6 +1,19 @@
-language: node_js
-node_js:
-  - 14
+---
+dist: xenial # Ubuntu 16.04
+language: bash
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+
+before_install:
+  # aws cli
+  - wget https://s3.amazonaws.com/aws-cli/awscli-bundle.zip
+  - unzip awscli-bundle.zip -d download
+  - ./download/awscli-bundle/install -b ~/bin/aws
+  - rm -r download
+  - rm awscli-bundle.zip
 
 script:
-  - make
+  - make # call Makefile with default target

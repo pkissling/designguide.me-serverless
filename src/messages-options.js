@@ -5,7 +5,7 @@ const allowedOrigins = [
   'https://www.designguide.me'
 ]
 
-module.exports.cors = async (event) => {
+exports.handler = async (event) => {
 
   // cors headers
   var origin = event.headers['Origin'] || event.headers['origin']

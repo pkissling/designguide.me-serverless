@@ -1,14 +1,19 @@
-.PHONY: prepare deploy_dev deploy_prod
+ZIP_PREFIX := designguide-me
+FUNCTIONS_S3_BUCKET := designguide.me-functions-src
+AWS_DEFAULT_REGION ?= eu-central-1
 
-default: deploy_prod
+default: sync
 
-prepare:
-	npm install
+SRC_DIR = ./src
+SRC_FILES := $(wildcard $(SRC_DIR)/*)
+TARGET_DIR = ./target
 
-deploy_dev: prepare
-	sls create_domain --stage dev
-	sls deploy --stage dev
+cleanup:
+	@if [ -d "${TARGET_DIR}" ]; then rm -Rf ${TARGET_DIR}; fi
+	@mkdir target
 
-deploy_prod: deploy_dev
-	sls create_domain --stage prod
-	sls deploy --stage prod
+package: cleanup
+	@ cd "${SRC_DIR}" && $(foreach SRC_FILE, $(SRC_FILES), zip ../${TARGET_DIR}/${ZIP_PREFIX}_$(basename $(notdir $(SRC_FILE))).zip $(notdir $(SRC_FILE));)
+
+sync: package
+	aws s3 sync ./target s3://${FUNCTIONS_S3_BUCKET}
