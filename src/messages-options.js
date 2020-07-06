@@ -16,6 +16,9 @@ exports.handler = async (event) => {
     }
     : {}
 
+  // log
+  console.log(`Origin: ${origin}`)
+
   // construct and return response
   return {
     headers: corsHeaders,
