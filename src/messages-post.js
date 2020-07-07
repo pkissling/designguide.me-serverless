@@ -9,18 +9,26 @@ const allowedOrigins = [
 
 exports.handler = async (event) => {
 
+  // cors headers
+  var origin = event.headers['Origin'] || event.headers['origin']
+  var corsHeaders = allowedOrigins.includes(origin) ?
+    {
+      "Access-Control-Allow-Origin": origin,
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Methods": "POST"
+    }
+    : {}
+
+  // validate payload
   var payload = JSON.parse(event.body)
   var validationError = validatePayload(payload)
   if (validationError) {
     return {
+      headers: corsHeaders,
       statusCode: 400,
-        body: JSON.stringify({"message" : validationError})
+      body: JSON.stringify({"message" : validationError})
     };
   }
-
-  // cors headers
-  var origin = event.headers['Origin'] || event.headers['origin']
-  var corsHeaders = allowedOrigins.includes(origin) ? { "Access-Control-Allow-Origin": origin } : {}
 
   // env variables
   var toMail = process.env.TO_MAIL
