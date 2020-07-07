@@ -1,7 +1,7 @@
 'use strict';
 
 var aws = require('aws-sdk');
-var ses = new aws.SES({ region: 'eu-central-1' });
+var ses = new aws.SES({ region: 'eu-west-1' });
 const allowedOrigins = [
   'https://designguide.me',
   'https://www.designguide.me'
