@@ -9,16 +9,6 @@ const allowedOrigins = [
 
 exports.handler = async (event) => {
 
-  // cors headers
-  var origin = event.headers['Origin'] || event.headers['origin']
-  var corsHeaders = allowedOrigins.includes(origin) ?
-    {
-      "Access-Control-Allow-Origin": origin,
-      "Access-Control-Allow-Headers": "*",
-      "Access-Control-Allow-Methods": "OPTIONS,POST"
-    }
-    : {}
-
   // validate payload
   var payload = JSON.parse(event.body)
   var validationError = validatePayload(payload)
@@ -52,7 +42,6 @@ exports.handler = async (event) => {
 
   // construct and return response
   return {
-    headers: corsHeaders,
     statusCode: 200
   };
 };

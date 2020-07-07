@@ -12,7 +12,7 @@ exports.handler = async (event) => {
   var corsHeaders = allowedOrigins.includes(origin) ?
     {
       "Access-Control-Allow-Origin": origin,
-      "Access-Control-Allow-Headers": "*",
+      "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Allow-Methods": "OPTIONS,POST"
     }
     : {}
