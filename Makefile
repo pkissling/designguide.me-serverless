@@ -1,6 +1,5 @@
 ZIP_PREFIX := designguide-me
 FUNCTIONS_S3_BUCKET := designguide.me-functions-src
-AWS_DEFAULT_REGION ?= eu-central-1
 
 default: sync
 
