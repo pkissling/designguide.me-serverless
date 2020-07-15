@@ -3,10 +3,26 @@
 var aws = require('aws-sdk');
 var s3 = new aws.S3();
 
+const allowedOrigins = [
+    'https://designguide.me',
+    'https://www.designguide.me'
+  ]
+
 exports.handler = async (event) => {
 
     // env variables
     const bucket = process.env.S3_BUCKET
+
+
+    // cors headers
+    var origin = event.headers['Origin'] || event.headers['origin']
+    var corsHeaders = allowedOrigins.includes(origin) ?
+        {
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Methods": "OPTIONS,POST"
+        }
+        : {}
 
     // http headers
     const fileType = event.headers['FileType']
@@ -18,6 +34,7 @@ exports.handler = async (event) => {
     if (validationError) {
         return {
             statusCode: 400,
+            headers: corsHeaders,
             body: JSON.stringify({ "message": validationError })
         };
     }
@@ -31,8 +48,9 @@ exports.handler = async (event) => {
 
     // construct and return response
     return {
-        body: url,
-        statusCode: 200
+        statusCode: 200,
+        headers: corsHeaders,
+        body: url
     };
 };
 
