@@ -2,7 +2,8 @@
 
 const allowedOrigins = [
   'https://designguide.me',
-  'https://www.designguide.me'
+  'https://www.designguide.me',
+  'http://localhost:8080' // FIXME
 ]
 
 exports.handler = async (event) => {
