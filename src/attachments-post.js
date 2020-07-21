@@ -5,14 +5,14 @@ var s3 = new aws.S3();
 
 const allowedOrigins = [
     'https://designguide.me',
-    'https://www.designguide.me'
+    'https://www.designguide.me',
+    'http://localhost:8080' // FIXME
   ]
 
 exports.handler = async (event) => {
 
     // env variables
     const bucket = process.env.S3_BUCKET
-
 
     // cors headers
     var origin = event.headers['Origin'] || event.headers['origin']
@@ -24,13 +24,8 @@ exports.handler = async (event) => {
         }
         : {}
 
-    // http headers
-    const fileType = event.headers['FileType']
-    const fileName = event.headers['FileName']
-    const context = event.headers['Context']
-
-    // validate params
-    var validationError = validateParams(fileType, fileName, context)
+    // validate payload
+    var validationError = validatePayload(event.body)
     if (validationError) {
         return {
             statusCode: 400,
@@ -38,6 +33,12 @@ exports.handler = async (event) => {
             body: JSON.stringify({ "message": validationError })
         };
     }
+
+    // mandatory fields
+    var payload = JSON.parse(event.body)
+    var fileName = payload.fileName
+    var fileType = payload.fileType
+    var context = payload.context
 
     // create signed url
     const url = s3.getSignedUrl('putObject', {
@@ -54,12 +55,13 @@ exports.handler = async (event) => {
     };
 };
 
-function validateParams(fileType, fileName, context) {
-    if (!fileType) {
+function validatePayload(body) {
+    var payload = JSON.parse(body)
+    if (!payload.fileType) {
         return "HTTP header 'FileType' is mandatory"
-    } else if (!fileName) {
+    } else if (!payload.fileName) {
         return "HTTP header 'FileName' is mandatory"
-    } else if (!context) {
+    } else if (!payload.context) {
         return "HTTP header 'Context' is mandatory"
     }
 
