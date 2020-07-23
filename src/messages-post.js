@@ -2,6 +2,7 @@
 
 var aws = require('aws-sdk');
 var ses = new aws.SES({ region: 'eu-west-1' });
+
 const allowedOrigins = [
   'https://designguide.me',
   'https://www.designguide.me'
@@ -43,10 +44,11 @@ exports.handler = async (event) => {
   var phone = payload.phone || "-"
   var purpose = payload.purpose || "-"
   var other = payload.other || "-"
+  var attachments = payload.attachments || []
 
   // send mail
   console.log("sending mail");
-  var email = createEmail(fromMail, toMail, name, email, phone, purpose, other);
+  var email = createEmail(fromMail, toMail, name, email, phone, purpose, other, attachments);
   await ses.sendEmail(email).promise()
   console.log("email sent");
 
@@ -57,7 +59,7 @@ exports.handler = async (event) => {
   };
 };
 
-function createEmail(fromMail, toMail, name, email, phone, purpose, other) {
+function createEmail(fromMail, toMail, name, email, phone, purpose, other, attachments) {
   return {
     Source: fromMail,
     Destination: {
@@ -77,7 +79,8 @@ function createEmail(fromMail, toMail, name, email, phone, purpose, other) {
             "Email: " + email + "\n\n" +
             "Telefonnummer: " + phone + "\n\n" +
             "Zweck: " + purpose + "\n\n" +
-            "Sontiges: " + other
+            "Sontiges: " + other + "\n\n" +
+            "Attachments: " + attachments
         }
       }
     }
