@@ -6,7 +6,6 @@ var s3 = new aws.S3();
 const allowedOrigins = [
     'https://designguide.me',
     'https://www.designguide.me',
-    'http://localhost:8080' // FIXME
   ]
 
 exports.handler = async (event) => {
@@ -58,11 +57,11 @@ exports.handler = async (event) => {
 function validatePayload(body) {
     var payload = JSON.parse(body)
     if (!payload.fileType) {
-        return "HTTP header 'FileType' is mandatory"
+        return "Attribute 'fileType' is mandatory"
     } else if (!payload.fileName) {
-        return "HTTP header 'FileName' is mandatory"
+        return "Attribute 'fileName' is mandatory"
     } else if (!payload.context) {
-        return "HTTP header 'Context' is mandatory"
+        return "Attribute 'context' is mandatory"
     }
 
     return null // payload valid
