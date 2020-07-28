@@ -5,7 +5,8 @@ var ses = new aws.SES({ region: 'eu-west-1' });
 
 const allowedOrigins = [
   'https://designguide.me',
-  'https://www.designguide.me'
+  'https://www.designguide.me',
+  'http://localhost:8080'
 ]
 
 exports.handler = async (event) => {

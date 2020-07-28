@@ -6,6 +6,7 @@ var s3 = new aws.S3();
 const allowedOrigins = [
     'https://designguide.me',
     'https://www.designguide.me',
+    'http://localhost:8080'
   ]
 
 exports.handler = async (event) => {
